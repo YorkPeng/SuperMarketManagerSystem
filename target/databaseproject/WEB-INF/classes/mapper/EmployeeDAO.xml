@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.EmployeeDAO">
+  <resultMap id="BaseResultMap" type="pojo.Employee">
+    <id column="empId" jdbcType="INTEGER" property="empid" />
+    <result column="empName" jdbcType="VARCHAR" property="empname" />
+    <result column="empGender" jdbcType="VARCHAR" property="empgender" />
+    <result column="empAge" jdbcType="INTEGER" property="empage" />
+    <result column="empSalary" jdbcType="INTEGER" property="empsalary" />
+    <result column="empType" jdbcType="INTEGER" property="emptype" />
+    <result column="empTelephone" jdbcType="VARCHAR" property="emptelephone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    empId, empName, empGender, empAge, empSalary, empType, empTelephone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where empId = #{empid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from employee
+    where empId = #{empid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="empId" keyProperty="empid" parameterType="pojo.Employee" useGeneratedKeys="true">
+    insert into employee (empName, empGender, empAge, 
+      empSalary, empType, empTelephone, empPassword
+      )
+    values (#{empname,jdbcType=VARCHAR}, #{empgender,jdbcType=VARCHAR}, #{empage,jdbcType=INTEGER}, 
+      #{empsalary,jdbcType=INTEGER}, #{emptype,jdbcType=INTEGER}, #{emptelephone,jdbcType=VARCHAR},#{emppassword,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="empId" keyProperty="empid" parameterType="pojo.Employee" useGeneratedKeys="true">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="empname != null">
+        empName,
+      </if>
+      <if test="empgender != null">
+        empGender,
+      </if>
+      <if test="empage != null">
+        empAge,
+      </if>
+      <if test="empsalary != null">
+        empSalary,
+      </if>
+      <if test="emptype != null">
+        empType,
+      </if>
+      <if test="emptelephone != null">
+        empTelephone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="empname != null">
+        #{empname,jdbcType=VARCHAR},
+      </if>
+      <if test="empgender != null">
+        #{empgender,jdbcType=VARCHAR},
+      </if>
+      <if test="empage != null">
+        #{empage,jdbcType=INTEGER},
+      </if>
+      <if test="empsalary != null">
+        #{empsalary,jdbcType=INTEGER},
+      </if>
+      <if test="emptype != null">
+        #{emptype,jdbcType=INTEGER},
+      </if>
+      <if test="emptelephone != null">
+        #{emptelephone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.Employee">
+    update employee
+    <set>
+      <if test="empname != null">
+        empName = #{empname,jdbcType=VARCHAR},
+      </if>
+      <if test="empgender != null">
+        empGender = #{empgender,jdbcType=VARCHAR},
+      </if>
+      <if test="empage != null">
+        empAge = #{empage,jdbcType=INTEGER},
+      </if>
+      <if test="empsalary != null">
+        empSalary = #{empsalary,jdbcType=INTEGER},
+      </if>
+      <if test="emptype != null">
+        empType = #{emptype,jdbcType=INTEGER},
+      </if>
+      <if test="emptelephone != null">
+        empTelephone = #{emptelephone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where empId = #{empid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.Employee">
+    update employee
+    set empName = #{empname,jdbcType=VARCHAR},
+      empGender = #{empgender,jdbcType=VARCHAR},
+      empAge = #{empage,jdbcType=INTEGER},
+      empSalary = #{empsalary,jdbcType=INTEGER},
+      empType = #{emptype,jdbcType=INTEGER},
+      empTelephone = #{emptelephone,jdbcType=VARCHAR},
+        empPassword = #{emppassword,jdbcType = VARCHAR}
+    where empId = #{empid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findEmpList" resultType="pojo.Employee">
+    SELECT *
+    FROM emp_view
+  </select>
+
+  <insert id="insertWithId" parameterType="pojo.Employee">
+    insert into employee (empId,empName, empGender, empAge, empSalary, empType, empTelephone)
+    values (#{empid,jdbcType=INTEGER}, #{empname,jdbcType=VARCHAR}, #{empgender,jdbcType=VARCHAR}, #{empage,jdbcType=INTEGER},
+      #{empsalary,jdbcType=INTEGER}, #{emptype,jdbcType=INTEGER}, #{emptelephone,jdbcType=VARCHAR}
+      )
+  </insert>
+  <select id="countTotalEmp" resultType="Integer">
+    select count(*)
+    from employee
+  </select>
+  
+  <select id="findEmpListWithOption" resultType="pojo.Employee" parameterType="String">
+    select *
+    from employee
+where empName like CONCAT('%',#{option,jdbcType=VARCHAR},'%')
+  </select>
+
+  <select id="check" parameterType="Integer" resultType="String">
+    select empPassword
+from employee
+where empId = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

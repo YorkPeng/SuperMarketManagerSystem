@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.HouseDAO">
+  <resultMap id="BaseResultMap" type="pojo.House">
+    <id column="houseId" jdbcType="INTEGER" property="houseid" />
+    <result column="houseAddress" jdbcType="VARCHAR" property="houseaddress" />
+    <result column="houseTelephone" jdbcType="VARCHAR" property="housetelephone" />
+    <result column="houseName" jdbcType="VARCHAR" property="housename" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    houseId, houseAddress, houseTelephone, houseName
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from house
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from house
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="houseId" keyProperty="houseid" parameterType="pojo.House" useGeneratedKeys="true">
+    insert into house (houseAddress, houseTelephone, houseName
+      )
+    values (#{houseaddress,jdbcType=VARCHAR}, #{housetelephone,jdbcType=VARCHAR}, #{housename,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="houseId" keyProperty="houseid" parameterType="pojo.House" useGeneratedKeys="true">
+    insert into house
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="houseaddress != null">
+        houseAddress,
+      </if>
+      <if test="housetelephone != null">
+        houseTelephone,
+      </if>
+      <if test="housename != null">
+        houseName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="houseaddress != null">
+        #{houseaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="housetelephone != null">
+        #{housetelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="housename != null">
+        #{housename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.House">
+    update house
+    <set>
+      <if test="houseaddress != null">
+        houseAddress = #{houseaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="housetelephone != null">
+        houseTelephone = #{housetelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="housename != null">
+        houseName = #{housename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.House">
+    update house
+    set houseAddress = #{houseaddress,jdbcType=VARCHAR},
+      houseTelephone = #{housetelephone,jdbcType=VARCHAR},
+      houseName = #{housename,jdbcType=VARCHAR}
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findHouseList" resultType="pojo.House">
+    SELECT *
+    FROM house
+  </select>
+
+  <select id="findHouseListWithOption" resultType="pojo.House" parameterType="String">
+    select *
+    from house
+where houseName like CONCAT('%',#{option,jdbcType=VARCHAR},'%')
+  </select>
+</mapper>

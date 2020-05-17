@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.CustomerDAO">
+  <resultMap id="BaseResultMap" type="pojo.Customer">
+    <id column="customerId" jdbcType="INTEGER" property="customerid" />
+    <result column="customerName" jdbcType="VARCHAR" property="customername" />
+    <result column="customeraddress" jdbcType="VARCHAR" property="customeraddress" />
+    <result column="customerTelephone" jdbcType="VARCHAR" property="customertelephone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    customerId, customerName, customeraddress, customerTelephone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where customerId = #{customerid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer
+    where customerId = #{customerid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="customerId" keyProperty="customerid" parameterType="pojo.Customer" useGeneratedKeys="true">
+    insert into customer (customerName, customeraddress, customerTelephone
+      )
+    values (#{customername,jdbcType=VARCHAR}, #{customeraddress,jdbcType=VARCHAR}, #{customertelephone,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="customerId" keyProperty="customerid" parameterType="pojo.Customer" useGeneratedKeys="true">
+    insert into customer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customername != null">
+        customerName,
+      </if>
+      <if test="customeraddress != null">
+        customeraddress,
+      </if>
+      <if test="customertelephone != null">
+        customerTelephone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customername != null">
+        #{customername,jdbcType=VARCHAR},
+      </if>
+      <if test="customeraddress != null">
+        #{customeraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="customertelephone != null">
+        #{customertelephone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.Customer">
+    update customer
+    <set>
+      <if test="customername != null">
+        customerName = #{customername,jdbcType=VARCHAR},
+      </if>
+      <if test="customeraddress != null">
+        customeraddress = #{customeraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="customertelephone != null">
+        customerTelephone = #{customertelephone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where customerId = #{customerid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.Customer">
+    update customer
+    set customerName = #{customername,jdbcType=VARCHAR},
+      customeraddress = #{customeraddress,jdbcType=VARCHAR},
+      customerTelephone = #{customertelephone,jdbcType=VARCHAR}
+    where customerId = #{customerid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findCustomerList" resultType="pojo.Customer">
+    SELECT *
+    FROM customer
+  </select>
+
+  <insert id="insertWithId" parameterType="pojo.Customer">
+    insert into customer (customerId, customerName, customeraddress, customerTelephone
+      )
+    values (#{customerid,jdbcType=INTEGER}, #{customername,jdbcType=VARCHAR}, #{customeraddress,jdbcType=VARCHAR}, #{customertelephone,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <select id="findCustomerListWithOption" resultType="pojo.Customer" parameterType="String">
+    select *
+    from customer
+where customerName like CONCAT('%',#{option,jdbcType=VARCHAR},'%')
+  </select>
+</mapper>

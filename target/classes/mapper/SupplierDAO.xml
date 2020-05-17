@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SupplierDAO">
+  <resultMap id="BaseResultMap" type="pojo.Supplier">
+    <id column="supplierId" jdbcType="INTEGER" property="supplierid" />
+    <result column="supplierName" jdbcType="VARCHAR" property="suppliername" />
+    <result column="supplierAddress" jdbcType="VARCHAR" property="supplieraddress" />
+    <result column="supplierTelephone" jdbcType="VARCHAR" property="suppliertelephone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    supplierId, supplierName, supplierAddress, supplierTelephone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from supplier
+    where supplierId = #{supplierid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from supplier
+    where supplierId = #{supplierid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="supplierId" keyProperty="supplierid" parameterType="pojo.Supplier" useGeneratedKeys="true">
+    insert into supplier (supplierName, supplierAddress, supplierTelephone
+      )
+    values (#{suppliername,jdbcType=VARCHAR}, #{supplieraddress,jdbcType=VARCHAR}, #{suppliertelephone,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="supplierId" keyProperty="supplierid" parameterType="pojo.Supplier" useGeneratedKeys="true">
+    insert into supplier
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="suppliername != null">
+        supplierName,
+      </if>
+      <if test="supplieraddress != null">
+        supplierAddress,
+      </if>
+      <if test="suppliertelephone != null">
+        supplierTelephone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="suppliername != null">
+        #{suppliername,jdbcType=VARCHAR},
+      </if>
+      <if test="supplieraddress != null">
+        #{supplieraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliertelephone != null">
+        #{suppliertelephone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.Supplier">
+    update supplier
+    <set>
+      <if test="suppliername != null">
+        supplierName = #{suppliername,jdbcType=VARCHAR},
+      </if>
+      <if test="supplieraddress != null">
+        supplierAddress = #{supplieraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliertelephone != null">
+        supplierTelephone = #{suppliertelephone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where supplierId = #{supplierid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.Supplier">
+    update supplier
+    set supplierName = #{suppliername,jdbcType=VARCHAR},
+      supplierAddress = #{supplieraddress,jdbcType=VARCHAR},
+      supplierTelephone = #{suppliertelephone,jdbcType=VARCHAR}
+    where supplierId = #{supplierid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findSupplierList" resultType="pojo.Supplier">
+    SELECT *
+    FROM supplier
+  </select>
+  <select id="findSupplierListWithOption" resultType="pojo.Supplier" parameterType="String">
+    select *
+    from supplier
+where supplierName like CONCAT('%',#{option,jdbcType=VARCHAR},'%')
+  </select>
+</mapper>

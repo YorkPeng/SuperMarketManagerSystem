@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SaleDAO">
+  <resultMap id="BaseResultMap" type="pojo.Sale">
+    <id column="saleId" jdbcType="INTEGER" property="saleid" />
+    <result column="saleTime" jdbcType="TIMESTAMP" property="saletime" />
+    <result column="saleEmpId" jdbcType="INTEGER" property="saleempid" />
+    <result column="saleItemId" jdbcType="INTEGER" property="saleitemid" />
+    <result column="saleAmount" jdbcType="INTEGER" property="saleamount" />
+    <result column="saleCustomerId" jdbcType="INTEGER" property="salecustomerid" />
+    <result column="salePrice" jdbcType="INTEGER" property="saleprice" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    saleId, saleTime, saleEmpId, saleItemId, saleAmount, saleCustomerId, salePrice
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sale
+    where saleId = #{saleid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sale
+    where saleId = #{saleid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="saleId" keyProperty="saleid" parameterType="pojo.Sale" useGeneratedKeys="true">
+    insert into sale (saleTime, saleEmpId, saleItemId, saleAmount, saleCustomerId, salePrice)
+    values (#{saletime,jdbcType=TIMESTAMP}, #{saleempid,jdbcType=INTEGER}, #{saleitemid,jdbcType=INTEGER}, 
+      #{saleamount,jdbcType=INTEGER}, #{salecustomerid,jdbcType=INTEGER}, #{saleprice,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="saleId" keyProperty="saleid" parameterType="pojo.Sale" useGeneratedKeys="true">
+    insert into sale
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="saletime != null">
+        saleTime,
+      </if>
+      <if test="saleempid != null">
+        saleEmpId,
+      </if>
+      <if test="saleitemid != null">
+        saleItemId,
+      </if>
+      <if test="saleamount != null">
+        saleAmount,
+      </if>
+      <if test="salecustomerid != null">
+        saleCustomerId,
+      </if>
+      <if test="saleprice != null">
+        salePrice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="saletime != null">
+        #{saletime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="saleempid != null">
+        #{saleempid,jdbcType=INTEGER},
+      </if>
+      <if test="saleitemid != null">
+        #{saleitemid,jdbcType=INTEGER},
+      </if>
+      <if test="saleamount != null">
+        #{saleamount,jdbcType=INTEGER},
+      </if>
+      <if test="salecustomerid != null">
+        #{salecustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="saleprice != null">
+        #{saleprice,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.Sale">
+    update sale
+    <set>
+      <if test="saletime != null">
+        saleTime = #{saletime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="saleempid != null">
+        saleEmpId = #{saleempid,jdbcType=INTEGER},
+      </if>
+      <if test="saleitemid != null">
+        saleItemId = #{saleitemid,jdbcType=INTEGER},
+      </if>
+      <if test="saleamount != null">
+        saleAmount = #{saleamount,jdbcType=INTEGER},
+      </if>
+      <if test="salecustomerid != null">
+        saleCustomerId = #{salecustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="saleprice != null">
+        salePrice = #{saleprice,jdbcType=INTEGER},
+      </if>
+    </set>
+    where saleId = #{saleid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.Sale">
+    update sale
+    set saleTime = #{saletime,jdbcType=TIMESTAMP},
+      saleEmpId = #{saleempid,jdbcType=INTEGER},
+      saleItemId = #{saleitemid,jdbcType=INTEGER},
+      saleAmount = #{saleamount,jdbcType=INTEGER},
+      saleCustomerId = #{salecustomerid,jdbcType=INTEGER},
+      salePrice = #{saleprice,jdbcType=INTEGER}
+    where saleId = #{saleid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findSaleList" resultType="pojo.Sale">
+    SELECT *
+    FROM sale
+  </select>
+
+  <select id="findSaleCustomList" resultType="pojo.SaleCustom">
+    SELECT *
+    FROM sale_employee_item_customer_view
+    ORDER BY saleTime
+  </select>
+</mapper>

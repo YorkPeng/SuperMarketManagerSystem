@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ItemDAO">
+  <resultMap id="BaseResultMap" type="pojo.Item">
+    <id column="itemId" jdbcType="INTEGER" property="itemid" />
+    <result column="itemName" jdbcType="VARCHAR" property="itemname" />
+    <result column="itemPrice" jdbcType="INTEGER" property="itemprice" />
+    <result column="itemAmount" jdbcType="INTEGER" property="itemamount" />
+    <result column="itemMan" jdbcType="VARCHAR" property="itemman" />
+    <result column="itemSupplierId" jdbcType="INTEGER" property="itemsupplierid" />
+    <result column="itemHouseId" jdbcType="INTEGER" property="itemhouseid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    itemId, itemName, itemPrice, itemAmount, itemMan, itemSupplierId, itemHouseId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from item
+    where itemId = #{itemid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from item
+    where itemId = #{itemid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="itemId" keyProperty="itemid" parameterType="pojo.Item" useGeneratedKeys="true">
+    insert into item (itemName, itemPrice, itemAmount, 
+      itemMan, itemSupplierId, itemHouseId
+      )
+    values (#{itemname,jdbcType=VARCHAR}, #{itemprice,jdbcType=INTEGER}, #{itemamount,jdbcType=INTEGER}, 
+      #{itemman,jdbcType=VARCHAR}, #{itemsupplierid,jdbcType=INTEGER}, #{itemhouseid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="itemId" keyProperty="itemid" parameterType="pojo.Item" useGeneratedKeys="true">
+    insert into item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemname != null">
+        itemName,
+      </if>
+      <if test="itemprice != null">
+        itemPrice,
+      </if>
+      <if test="itemamount != null">
+        itemAmount,
+      </if>
+      <if test="itemman != null">
+        itemMan,
+      </if>
+      <if test="itemsupplierid != null">
+        itemSupplierId,
+      </if>
+      <if test="itemhouseid != null">
+        itemHouseId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemname != null">
+        #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="itemprice != null">
+        #{itemprice,jdbcType=INTEGER},
+      </if>
+      <if test="itemamount != null">
+        #{itemamount,jdbcType=INTEGER},
+      </if>
+      <if test="itemman != null">
+        #{itemman,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsupplierid != null">
+        #{itemsupplierid,jdbcType=INTEGER},
+      </if>
+      <if test="itemhouseid != null">
+        #{itemhouseid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.Item">
+    update item
+    <set>
+      <if test="itemname != null">
+        itemName = #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="itemprice != null">
+        itemPrice = #{itemprice,jdbcType=INTEGER},
+      </if>
+      <if test="itemamount != null">
+        itemAmount = #{itemamount,jdbcType=INTEGER},
+      </if>
+      <if test="itemman != null">
+        itemMan = #{itemman,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsupplierid != null">
+        itemSupplierId = #{itemsupplierid,jdbcType=INTEGER},
+      </if>
+      <if test="itemhouseid != null">
+        itemHouseId = #{itemhouseid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where itemId = #{itemid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.Item">
+    update item
+    set itemName = #{itemname,jdbcType=VARCHAR},
+      itemPrice = #{itemprice,jdbcType=INTEGER},
+      itemAmount = #{itemamount,jdbcType=INTEGER},
+      itemMan = #{itemman,jdbcType=VARCHAR},
+      itemSupplierId = #{itemsupplierid,jdbcType=INTEGER},
+      itemHouseId = #{itemhouseid,jdbcType=INTEGER}
+    where itemId = #{itemid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findItemsList" resultType="pojo.Item">
+    SELECT *
+    FROM item
+  </select>
+
+  <update id="updateInItem" parameterType="pojo.In">
+    UPDATE item
+    SET itemAmount = itemAmount + #{inamount,jdbcType=INTEGER}
+    WHERE itemId = #{initemid,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateItemWithSale" parameterType="pojo.Sale">
+    UPDATE item
+    SET itemAmount = itemAmount - #{saleamount,jdbcType=INTEGER}
+    WHERE itemId = #{saleitemid}
+  </update>
+
+  <select id="totalNumber" resultType="Integer">
+    select count(*)
+    from item_view;
+  </select>
+
+  <select id="findItemVoList" resultType="pojo.ItemCustom">
+    select *
+    from item_supplier_house_view
+  </select>
+
+  <select id="findItemListWithOption" resultType="pojo.ItemCustom" parameterType="String">
+    select *
+    from item_supplier_house_view
+    where itemName like CONCAT('%',#{option,jdbcType=VARCHAR},'%')
+  </select>
+</mapper>
